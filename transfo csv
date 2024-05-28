@@ -1,0 +1,39 @@
+import pandas as pd
+import os
+# Chemin du dossier contenant les fichiers .trc
+folder_path = 'C:/Users/User/Desktop/Todai classes/S1 Robotic/data/MotionCaptureData trc'
+# Vérifiez si le dossier existe
+if not os.path.exists(folder_path):
+    print(f"Le dossier {folder_path} n'existe pas.")
+    exit(1)
+# Liste des fichiers dans le dossier
+files = [f for f in os.listdir(folder_path) if f.endswith('.trc')]
+# Vérifiez s'il y a des fichiers .trc dans le dossier
+if not files:
+    print(f"Aucun fichier .trc trouvé dans le dossier {folder_path}.")
+    exit(1)
+# Transformation de chaque fichier .trc en fichier .csv
+for file in files:
+    file_path = os.path.join(folder_path, file)
+    try:
+        # Lecture du fichier .trc en tant que fichier texte
+        with open(file_path, 'r') as trc_file:
+            data = trc_file.readlines()
+        # Créez une liste pour stocker les données
+        rows = []
+        # Traitez chaque ligne du fichier
+        for line in data:
+            # Séparez les valeurs par un séparateur (par exemple, une virgule ou une tabulation)
+            # Adaptez cette ligne selon la structure réelle de vos fichiers .trc
+            row = line.strip().split('	')
+            rows.append(row)
+        # Convertissez les données en DataFrame
+        df = pd.DataFrame(rows)
+        # Chemin du fichier .csv de sortie
+        output_file_path = os.path.splitext(file_path)[0] + '.csv'
+        # Sauvegarde en fichier .csv
+        df.to_csv(output_file_path, index=False, header=False)
+        print(f"Fichier converti: {file} -> {output_file_path}")
+    except Exception as e:
+        print(f"Erreur lors de la conversion du fichier {file}: {e}")
+print("Conversion terminée.")
